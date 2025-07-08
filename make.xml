@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<targets>
+  <library>
+    <sources exclude="MainControl.cpp">
+      <!-- hardware_interface/*.cpp
+      point_approach/*.cpp -->
+      obstacle_avoidance/*.cpp
+      mbbDriveToPoint.cpp
+    </sources>
+    <pkg-config>opencv4</pkg-config>
+  </library>
+  <program name="ThesisPassberg">
+    <sources>
+      MainControl.cpp
+    </sources>
+    <pkg-config>opencv4</pkg-config>
+  </program>
+</targets>

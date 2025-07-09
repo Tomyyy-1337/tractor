@@ -21,6 +21,7 @@
 //----------------------------------------------------------------------
 #pragma once
 
+#include <tuple>
 #include "plugins/ib2c/tModule.h"
 #include "rrlib/aspect_maps/tAspectMap.h"
 #include "rrlib/si_units/si_units.h"
@@ -42,10 +43,10 @@ public:
 	//----------------------------------------------------------------------
 
 	// Map of distances to obstacles in the robots coordinate system. (Supossed to take input from aspect_maps_application/obstacle_maps/distance_map)
-	tOutput<rrlib::aspect_maps::tAspectMap<float>> out_obstacle_distance_map;
+	tInput<rrlib::aspect_maps::tAspectMap<float>> out_obstacle_distance_map;
 
 	// Current curvature of the vehicle.
-	tCertaintyInput<rrlib::si_units::tCurvature<double>, ib2c::tScalarSigma> in_current_curvature;
+	tCertaintyInput<rrlib::si_units::tCurvature<float>, ib2c::tScalarSigma> in_current_curvature;
 
 
 	//----------------------------------------------------------------------
@@ -53,16 +54,16 @@ public:
 	//----------------------------------------------------------------------
 
 	// Distance to the obstacle at which the vehicle should start turning away.
-	tParameter<rrlib::si_units::tLength<double>> par_turn_away_distance;
+	tParameter<rrlib::si_units::tLength<float>> par_turn_away_distance;
 
 	// Vehicle Width
-	tParameter<rrlib::si_units::tLength<double>> par_vehicle_width;
+	tParameter<rrlib::si_units::tLength<float>> par_vehicle_width;
 
 	//----------------------------------------------------------------------
 	// Output Ports
 	//----------------------------------------------------------------------
 
-	tOutput<rrlib::si_units::tCurvature<double>> out_curvature; 
+	tOutput<rrlib::si_units::tCurvature<float>> out_curvature; 
 
 protected:
 	/** Destructor
@@ -81,5 +82,18 @@ private:
 
 	virtual ib2c::tTargetRating CalculateTargetRating() const override;
 
+	static constexpr int NUMBER_OF_SAMPLING_POINTS = 100;
+	static constexpr int NUMBER_OF_TENTACLES = 25; 
+
+	// Length of the tentacles in meters
+	const float TENTACLE_LENGTH = 10;
+	
+	// tentacles
+	std::tuple<int,int> a[NUMBER_OF_TENTACLES][NUMBER_OF_SAMPLING_POINTS];
+
+	void rotate(std::tuple<float, float>& point, float angle);
+
+	float index_to_angle(int index);
+	
 };
 }

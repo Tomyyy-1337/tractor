@@ -43,7 +43,7 @@ public:
 	//----------------------------------------------------------------------
 
 	// Map of distances to obstacles in the robots coordinate system. (Supossed to take input from aspect_maps_application/obstacle_maps/distance_map)
-	tInput<rrlib::aspect_maps::tAspectMap<float>> out_obstacle_distance_map;
+	tInput<rrlib::aspect_maps::tAspectMap<float>> in_obstacle_distance_map;
 
 	// Current curvature of the vehicle.
 	tCertaintyInput<rrlib::si_units::tCurvature<float>, ib2c::tScalarSigma> in_current_curvature;
@@ -52,9 +52,6 @@ public:
 	//----------------------------------------------------------------------
 	// Parameters
 	//----------------------------------------------------------------------
-
-	// Distance to the obstacle at which the vehicle should start turning away.
-	tParameter<rrlib::si_units::tLength<float>> par_turn_away_distance;
 
 	// Vehicle Width
 	tParameter<rrlib::si_units::tLength<float>> par_vehicle_width;
@@ -89,11 +86,15 @@ private:
 	const float TENTACLE_LENGTH = 10;
 	
 	// tentacles
-	std::tuple<int,int> a[NUMBER_OF_TENTACLES][NUMBER_OF_SAMPLING_POINTS];
+	std::tuple<int,int> precomputed_tentacles[NUMBER_OF_TENTACLES][NUMBER_OF_SAMPLING_POINTS];
 
-	void rotate(std::tuple<float, float>& point, float angle);
+	void rotate(std::tuple<float, float>& point, float angle) const;
 
-	float index_to_angle(int index);
+	float index_to_angle(int index) const;
+
+	bool path_is_clear(const std::tuple<int, int> tentacle[]) const;
+	
+	void calculate_tentacle(std::tuple<int, int> tentacle_start[], float angle) const;
 	
 };
 }
